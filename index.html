@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>MSGraph VueJS Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+        <h5 class="my-0 mr-md-auto font-weight-normal">MSGraph VueJS Dashboard</h5>
+        
+        <!-- the area for the login username -->
+        <nav class="">
+            <span class="app-user">&nbsp;&nbsp;</span>
+        </nav>
+    </div>
+
+    <div class="mx-auto text-center">
+        <h1 class="display-4">MSGraph VueJS Dashboard</h1>
+        <p class="lead">This uses the ADALJS library to authenticate to the GraphAPI in a simple HTML/VueJS app.</p>
+    </div>
+
+    <div class="container" id="app">
+        <div class="card-deck mb-3 text-center">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Workday Breakdown</h4>
+                </div>
+                <div class="card-body">
+                    <workday-breakdown v-bind:token="token"></workday-breakdown>
+                </div>
+                <div class="card-footer text-muted">
+                    <span class="small">This shows the breakdown of your day - time in meetings vs time not in meetings.</span>
+                </div>
+            </div>
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Your Top 10 Contacts</h4>
+                </div>
+                <div class="card-body">
+                    <top-people v-bind:token="token"></top-people>
+                </div>
+                <div class="card-footer text-muted">
+                    <span class="small">This shows the "Top 10" people you communicate with using Office365. Note this might not return 10 photos if some of your "Top 10" do not have a photo.</span>
+                </div>
+            </div>
+        </div>
+    </div>      
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+    <!-- vuejs production version, optimized for size and speed -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="js/adal.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+
+    <canvas id="chart-area"></canvas>
+</body>
+</html>
