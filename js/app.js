@@ -6,16 +6,14 @@ Vue.component('workday-breakdown', {
     },
     methods: {
         getWorkdayBreakdown() {
-            var _this = this; //save a reference to this to allow us to us the parent this to update our data
-
             //get working hours for the signed-in user
             $.ajax({
                 type: "GET",
                 url: "https://graph.microsoft.com/v1.0/me/mailboxSettings/workingHours",
                 headers: {
-                    'Authorization': 'Bearer ' + _this.token,
+                    'Authorization': 'Bearer ' + this.token,
                 }
-            }).done(function (data) {
+            }).done((data) => {
                 //calculate minutes in my day
                 day = moment().format('YYYY-MM-DD');
                 startDate = moment(day + 'T' + data.startTime);
@@ -31,10 +29,10 @@ Vue.component('workday-breakdown', {
                     type: "GET",
                     url: "https://graph.microsoft.com/v1.0/me/calendar/calendarView?startDateTime=" + start + "&endDateTime=" + end,
                     headers: {
-                        'Authorization': 'Bearer ' + _this.token,
+                        'Authorization': 'Bearer ' + this.token,
                         'Prefer': 'outlook.timezone="Pacific Standard Time"'
                     }
-                }).done(function (data) {
+                }).done((data) => {
                     minutesInMeetings = 0;
 
                     if (data.value === undefined || data.value.length == 0) {
@@ -77,7 +75,7 @@ Vue.component('workday-breakdown', {
                         var ctx = document.getElementById('chart-area');
                         window.myPie = new Chart(ctx, config);
                     });
-                }).fail(function() {
+                }).fail(() => {
                     console.log('Error getting calendar data.');
                 });
 
@@ -85,7 +83,7 @@ Vue.component('workday-breakdown', {
                 //$('#data').text(output).show();
 
                 $('#chartdata').text('A breakdown of your workday:').show();
-            }).fail(function() {
+            }).fail(() => {
                 console.log('Error getting mailbox settings!');
             });
         }
@@ -106,7 +104,6 @@ Vue.component('top-people', {
     },
     methods: {
         getPeople() {
-            var _this = this; //save a reference to this to allow us to us the parent this to update our data
             var output = '';
 
             //get working hours for the signed-in user
@@ -114,9 +111,9 @@ Vue.component('top-people', {
                 type: "GET",
                 url: "https://graph.microsoft.com/v1.0/me/people/?top=10",
                 headers: {
-                    'Authorization': 'Bearer ' + _this.token,
+                    'Authorization': 'Bearer ' + this.token,
                 }
-            }).done(async function (data) {
+            }).done(async (data) => {
                 var promises = [];
 
                 for (d in data.value) {
@@ -125,14 +122,14 @@ Vue.component('top-people', {
                         type: "GET",
                         url: "https://graph.microsoft.com/v1.0/users/" + data.value[d].userPrincipalName + "/photos/48x48/$value",
                         headers: {
-                            'Authorization': 'Bearer ' + _this.token,
+                            'Authorization': 'Bearer ' + this.token,
                         },
                         xhr:function(){ // Seems like the only way to get access to the xhr object
                             var xhr = new XMLHttpRequest();
                             xhr.responseType= 'blob'
                             return xhr;
                         },
-                    }).done(function (data) {
+                    }).done((data) => {
                         var imageElm = document.createElement("img");
                         var reader = new FileReader();
                         reader.onload = function () {
@@ -143,7 +140,7 @@ Vue.component('top-people', {
                             output = output + "<img src=\"" + imageElm.src + "\" />"
                         }
                         reader.readAsDataURL(data);
-                    }).fail(function() {
+                    }).fail(() => {
                         console.log('Could not get photo');
                     }));
                 }
@@ -151,8 +148,8 @@ Vue.component('top-people', {
                 //wait for all the async calls to finish
                 await Promise.all(promises.map(p => p.catch(() => undefined)));
                 //update the vuejs data with the result
-                _this.imageOutput = output;
-            }).fail(function() {
+                this.imageOutput = output;
+            }).fail(() => {
                 console.log('Error getting top 10 people!');
             });
         }
@@ -172,7 +169,6 @@ var app = new Vue({
     },
     methods: {
         getToken() {
-            _this = this; //save a reference to the parent this
             // Enter Global Config Values & Instantiate ADAL AuthenticationContext
             window.config = {
                 instance: 'https://login.microsoftonline.com/',
@@ -213,14 +209,14 @@ var app = new Vue({
                     $signOutButton.show();
                     
                     //acquire token for ms graph. the service we're acquiring a token for should be the same service we call in the ajax request below
-                    authContext.acquireToken('https://graph.microsoft.com', function (error, token) {
+                    authContext.acquireToken('https://graph.microsoft.com', (error, token) => {
                         // Handle ADAL Error
                         if (error || !token) {
                             printErrorMessage('ADAL Error Occurred: ' + error);
                             return;
                         }
                     
-                        _this.token = token; //update our data with the token
+                        this.token = token; //update our data with the token
                     });
                 } else {
                     $userDisplay.empty();
